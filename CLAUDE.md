@@ -12,7 +12,7 @@ pip install -r requirements.txt
 
 **Run the application:**
 ```bash
-streamlit run projeto_acoes/app.py
+python3 -m streamlit run projeto_acoes/app.py
 ```
 
 **Stop the application:**
