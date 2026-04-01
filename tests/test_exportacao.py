@@ -85,9 +85,10 @@ class TestExpanders_Oi:
 
     def test_conteudo_oi_menciona_recuperacao_judicial(self, dashboard_relatorio: DashboardPage):
         dashboard_relatorio.toggle_expander("Situação da Oi")
-        expect(
-            dashboard_relatorio.page.get_by_text("recuperação judicial")
-        ).to_be_visible()
+        # "recuperação judicial" aparece em múltiplos lugares do DOM;
+        # restringir ao contexto do expander da Oi
+        expander = dashboard_relatorio.page.locator("details:has(summary:has-text('Situação da Oi'))")
+        expect(expander.get_by_text("recuperação judicial").first).to_be_visible()
 
     def test_expander_oi_ausente_quando_oi_desmarcada(self, dashboard: DashboardPage):
         dashboard.toggle_company("Oi")

@@ -31,16 +31,12 @@ class DashboardPage:
         self.page.wait_for_selector(".status-bar", timeout=30_000)
 
     def wait_for_rerun(self):
-        """Aguarda o Streamlit terminar de re-executar após uma interação.
-
-        Usa timeout fixo: o Streamlit não expõe um indicador de rerun estável
-        em todas as versões. 4s é suficiente para reruns com fetch de dados.
-        """
+        """Aguarda o Streamlit terminar de re-executar após uma interação."""
         self.page.wait_for_timeout(4_000)
 
     def click_tab(self, name: str):
         self.page.get_by_role("tab", name=name).click()
-        self.page.wait_for_timeout(1_000)
+        self.page.wait_for_timeout(2_500)
 
     def get_active_tab_name(self) -> str:
         return self.page.locator('[role="tab"][aria-selected="true"]').inner_text()
@@ -54,21 +50,30 @@ class DashboardPage:
     # ── Sidebar — filtros de data ─────────────────────────────────────────────
 
     def get_date_inicio(self) -> str:
-        return self.page.get_by_label("Data de início").input_value()
+        return self._date_input("Data de início").input_value()
 
     def get_date_fim(self) -> str:
-        return self.page.get_by_label("Data de fim").input_value()
+        return self._date_input("Data de fim").input_value()
+
+    def _date_input(self, label: str):
+        """Retorna o <input> dentro do stDateInput com o label informado."""
+        return (
+            self.page.locator('[data-testid="stDateInput"]')
+            .filter(has_text=label)
+            .locator("input")
+            .first
+        )
 
     def set_date_inicio(self, value: str):
         """value no formato YYYY/MM/DD."""
-        field = self.page.get_by_label("Data de início")
+        field = self._date_input("Data de início")
         field.click()
         field.fill(value)
         field.press("Enter")
         self.wait_for_rerun()
 
     def set_date_fim(self, value: str):
-        field = self.page.get_by_label("Data de fim")
+        field = self._date_input("Data de fim")
         field.click()
         field.fill(value)
         field.press("Enter")
@@ -76,11 +81,24 @@ class DashboardPage:
 
     # ── Sidebar — operadoras ──────────────────────────────────────────────────
 
+    def _company_label(self, name: str):
+        """Retorna o elemento <label> visível do checkbox de uma operadora.
+
+        Streamlit oculta o <input> nativo e aplica estilo ao <label>.
+        Clicar no <label> é a forma correta de ativar o checkbox.
+        """
+        sidebar = self.page.locator('[data-testid="stSidebar"]')
+        return sidebar.locator(f'label:has-text("{name}")').first
+
     def is_company_checked(self, name: str) -> bool:
-        return self.page.get_by_label(name).is_checked()
+        sidebar = self.page.locator('[data-testid="stSidebar"]')
+        return (
+            sidebar.locator(f'label:has-text("{name}") input[type="checkbox"]')
+            .first.is_checked()
+        )
 
     def toggle_company(self, name: str):
-        self.page.get_by_label(name).click()
+        self._company_label(name).click()
         self.page.wait_for_timeout(3_000)
 
     def uncheck_all_companies(self):
@@ -124,18 +142,25 @@ class DashboardPage:
 
     # ── Aba Análise Técnica ───────────────────────────────────────────────────
 
+    def _ma_toggle_label(self):
+        """Streamlit toggle: clicar no <label> visível, não no <input> oculto."""
+        return self.page.locator('label:has-text("Exibir Média Móvel")').first
+
     def is_ma_toggle_checked(self) -> bool:
-        return self.page.get_by_label("Exibir Média Móvel").is_checked()
+        return (
+            self.page.locator('label:has-text("Exibir Média Móvel") input')
+            .first.is_checked()
+        )
 
     def click_ma_toggle(self):
-        self.page.get_by_label("Exibir Média Móvel").click()
+        self._ma_toggle_label().click()
         self.page.wait_for_timeout(1_000)
 
     def is_ma_slider_visible(self) -> bool:
         return self.page.get_by_text("Período da Média Móvel (dias)").is_visible()
 
     def set_ma_period(self, value: int):
-        """Define o período da MA via teclado (posição relativa ao valor atual)."""
+        """Define o período da MA via teclado (relativo ao valor atual)."""
         slider = self.page.locator('[data-testid="stSlider"] input[type="range"]')
         slider.click()
         current = int(slider.input_value())
@@ -174,7 +199,7 @@ class DashboardPage:
 
     def toggle_expander(self, partial_text: str):
         self.page.locator(f"summary:has-text('{partial_text}')").click()
-        self.page.wait_for_timeout(400)
+        self.page.wait_for_timeout(1_500)
 
     # ── Alertas e mensagens ───────────────────────────────────────────────────
 

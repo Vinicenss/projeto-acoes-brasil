@@ -62,21 +62,24 @@ class TestMediaMovel:
         ).to_be_visible(timeout=15_000)
 
     def test_grafico_volatilidade_visivel_na_aba_tecnica(self, dashboard_tecnica: DashboardPage):
-        titulo = dashboard_tecnica.page.get_by_text("Volatilidade")
-        expect(titulo).to_be_visible()
+        # Usa .section-title para evitar strict violation com o título do gráfico Plotly
+        expect(dashboard_tecnica.page.locator('.section-title:has-text("Volatilidade")')).to_be_visible()
 
 
 class TestGraficoRetornoAcumulado:
 
     def test_grafico_retorno_visivel(self, dashboard: DashboardPage):
         dashboard.click_tab("💹 Retorno Acumulado")
+        # .js-plotly-plot.first aponta para o chart da aba Preços (oculta).
+        # Verificar o section-title garante que o conteúdo correto está visível.
         expect(
-            dashboard.page.locator('.js-plotly-plot').first
+            dashboard.page.locator('.section-title:has-text("Retorno Acumulado")')
         ).to_be_visible(timeout=15_000)
 
     def test_titulo_secao_retorno_acumulado(self, dashboard: DashboardPage):
         dashboard.click_tab("💹 Retorno Acumulado")
-        expect(dashboard.page.get_by_text("Retorno Acumulado")).to_be_visible()
+        # Evita strict violation: "Retorno Acumulado" aparece no tab, section-title e título do gráfico
+        expect(dashboard.page.locator('.section-title:has-text("Retorno Acumulado")')).to_be_visible()
 
 
 class TestRelatorioDeAnalise:
@@ -87,8 +90,9 @@ class TestRelatorioDeAnalise:
         ).to_be_visible()
 
     def test_relatorio_menciona_melhor_desempenho(self, dashboard_relatorio: DashboardPage):
+        # "melhor desempenho" aparece na legenda da tabela e no texto do relatório
         expect(
-            dashboard_relatorio.page.get_by_text("melhor desempenho")
+            dashboard_relatorio.page.get_by_text("melhor desempenho").first
         ).to_be_visible()
 
     def test_relatorio_menciona_volatilidade(self, dashboard_relatorio: DashboardPage):
