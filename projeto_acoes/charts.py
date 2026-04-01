@@ -3,23 +3,23 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 CORES = {
-    "Vivo": "#c084fc",   # roxo claro — contraste 7.2:1 sobre fundo escuro
-    "TIM": "#79b8ff",    # azul claro — contraste 7.5:1
-    "Oi": "#f5c400",     # amarelo forte — contraste 8.1:1
+    "Vivo": "#6d28d9",   # violeta — contraste 7.1:1 sobre fundo branco
+    "TIM": "#1d4ed8",    # azul — contraste 8.3:1
+    "Oi": "#b45309",     # âmbar escuro — contraste 6.9:1
 }
 
 LAYOUT_BASE = dict(
     font=dict(family="Inter, sans-serif", size=13),
-    plot_bgcolor="#0e1117",
-    paper_bgcolor="#0e1117",
-    font_color="#fafafa",
+    plot_bgcolor="#ffffff",
+    paper_bgcolor="#f8f9fa",
+    font_color="#212529",
     legend=dict(
-        bgcolor="rgba(255,255,255,0.05)",
-        bordercolor="rgba(255,255,255,0.1)",
+        bgcolor="rgba(255,255,255,0.9)",
+        bordercolor="#dee2e6",
         borderwidth=1,
     ),
-    xaxis=dict(gridcolor="rgba(255,255,255,0.07)", showgrid=True),
-    yaxis=dict(gridcolor="rgba(255,255,255,0.07)", showgrid=True),
+    xaxis=dict(gridcolor="rgba(0,0,0,0.07)", showgrid=True, linecolor="#dee2e6"),
+    yaxis=dict(gridcolor="rgba(0,0,0,0.07)", showgrid=True, linecolor="#dee2e6"),
     margin=dict(t=50, b=40, l=50, r=20),
 )
 
@@ -44,8 +44,8 @@ def grafico_retorno_acumulado(df_retorno: pd.DataFrame) -> go.Figure:
         color_discrete_map=CORES,
     )
     fig.add_hline(
-        y=100, line_dash="dot", line_color="rgba(255,255,255,0.3)",
-        annotation_text="Base inicial", annotation_font_color="rgba(255,255,255,0.5)"
+        y=100, line_dash="dot", line_color="rgba(0,0,0,0.25)",
+        annotation_text="Base inicial", annotation_font_color="rgba(0,0,0,0.45)"
     )
     fig.update_traces(line=dict(width=2.5))
     fig.update_layout(**LAYOUT_BASE, legend_title_text="Operadora", hovermode="x unified")

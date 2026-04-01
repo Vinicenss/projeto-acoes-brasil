@@ -12,33 +12,34 @@ st.set_page_config(
 st.markdown("""
 <style>
     /* Fundo geral */
-    .stApp { background-color: #0e1117; }
+    .stApp { background-color: #f8f9fa; }
 
     /* Título principal */
     .main-title {
         font-size: 2rem;
         font-weight: 700;
-        color: #f0f6fc;
+        color: #1a1a2e;
         margin-bottom: 0;
     }
     .main-subtitle {
         font-size: 0.95rem;
-        color: #adbac7;
+        color: #6c757d;
         margin-top: 4px;
         margin-bottom: 24px;
     }
 
     /* Cards de KPI */
     .kpi-card {
-        background: #1c2128;
-        border: 1px solid #444c56;
+        background: #ffffff;
+        border: 1px solid #dee2e6;
         border-radius: 12px;
         padding: 18px 22px;
         text-align: center;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     }
     .kpi-label {
         font-size: 0.82rem;
-        color: #adbac7;
+        color: #6c757d;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         margin-bottom: 6px;
@@ -47,17 +48,17 @@ st.markdown("""
     .kpi-value {
         font-size: 1.6rem;
         font-weight: 700;
-        color: #f0f6fc;
+        color: #1a1a2e;
     }
-    .kpi-delta-pos { color: #56d364; font-size: 0.9rem; font-weight: 700; }
-    .kpi-delta-neg { color: #ff7b72; font-size: 0.9rem; font-weight: 700; }
+    .kpi-delta-pos { color: #1a7340; font-size: 0.9rem; font-weight: 700; }
+    .kpi-delta-neg { color: #c0392b; font-size: 0.9rem; font-weight: 700; }
 
     /* Separador de seção */
     .section-title {
         font-size: 1.15rem;
         font-weight: 700;
-        color: #f0f6fc;
-        border-left: 4px solid #79b8ff;
+        color: #1a1a2e;
+        border-left: 4px solid #4361ee;
         padding-left: 12px;
         margin-top: 36px;
         margin-bottom: 14px;
@@ -65,11 +66,11 @@ st.markdown("""
 
     /* Sidebar */
     section[data-testid="stSidebar"] {
-        background-color: #1c2128;
-        border-right: 1px solid #444c56;
+        background-color: #f1f3f5;
+        border-right: 1px solid #dee2e6;
     }
     section[data-testid="stSidebar"] .stMarkdown p {
-        color: #e6edf3;
+        color: #212529;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -148,9 +149,9 @@ st.markdown('<p class="section-title">Comparativo Final</p>', unsafe_allow_html=
 def destacar(val):
     if isinstance(val, (int, float)):
         if val == metricas["Variação Total (%)"].max():
-            return "background-color: #1a3a2a; color: #56d364; font-weight: bold"
+            return "background-color: #d1fae5; color: #1a7340; font-weight: bold"
         if val == metricas["Variação Total (%)"].min():
-            return "background-color: #3a1212; color: #ff7b72; font-weight: bold"
+            return "background-color: #fee2e2; color: #c0392b; font-weight: bold"
     return ""
 
 st.dataframe(
@@ -174,17 +175,17 @@ sinal_melhor = "alta" if var_melhor >= 0 else "queda"
 sinal_pior = "alta" if var_pior >= 0 else "queda"
 
 st.markdown(f"""
-<div style="background:#1c2128; border:1px solid #444c56; border-radius:12px; padding:24px 28px; line-height:1.9; color:#e6edf3; font-size:0.95rem;">
+<div style="background:#ffffff; border:1px solid #dee2e6; border-radius:12px; padding:24px 28px; line-height:1.9; color:#343a40; font-size:0.95rem; box-shadow:0 1px 4px rgba(0,0,0,0.06);">
 
-<b style="color:#f0f6fc; font-size:1rem;">Resumo do Período ({data_inicio.strftime('%d/%m/%Y')} a {data_fim.strftime('%d/%m/%Y')})</b><br><br>
+<b style="color:#1a1a2e; font-size:1rem;">Resumo do Período ({data_inicio.strftime('%d/%m/%Y')} a {data_fim.strftime('%d/%m/%Y')})</b><br><br>
 
-No período analisado, <b style="color:#f0f6fc;">{melhor}</b> foi a operadora com melhor desempenho,
-registrando uma {sinal_melhor} de <b style="color:#56d364;">{abs(var_melhor):.2f}%</b>.
-Já <b style="color:#f0f6fc;">{pior}</b> apresentou o pior resultado, com
-{'alta' if var_pior >= 0 else 'queda'} de <b style="color:#ff7b72;">{abs(var_pior):.2f}%</b>.<br><br>
+No período analisado, <b style="color:#1a1a2e;">{melhor}</b> foi a operadora com melhor desempenho,
+registrando uma {sinal_melhor} de <b style="color:#1a7340;">{abs(var_melhor):.2f}%</b>.
+Já <b style="color:#1a1a2e;">{pior}</b> apresentou o pior resultado, com
+{'alta' if var_pior >= 0 else 'queda'} de <b style="color:#c0392b;">{abs(var_pior):.2f}%</b>.<br><br>
 
-Em termos de risco, <b style="color:#f0f6fc;">{mais_volatil}</b> foi a ação mais volátil do período
-(maior variação diária de preço), enquanto <b style="color:#f0f6fc;">{menos_volatil}</b> se mostrou
+Em termos de risco, <b style="color:#1a1a2e;">{mais_volatil}</b> foi a ação mais volátil do período
+(maior variação diária de preço), enquanto <b style="color:#1a1a2e;">{menos_volatil}</b> se mostrou
 a opção mais estável.
 
 </div>
@@ -194,9 +195,9 @@ a opção mais estável.
 if "Oi" in selecionadas:
     st.markdown('<p class="section-title">Situação da Oi (OIBR3)</p>', unsafe_allow_html=True)
     st.markdown("""
-<div style="background:#211a00; border:1px solid #7a6200; border-radius:12px; padding:24px 28px; line-height:1.9; color:#e6edf3; font-size:0.95rem;">
+<div style="background:#fffbeb; border:1px solid #d97706; border-radius:12px; padding:24px 28px; line-height:1.9; color:#343a40; font-size:0.95rem;">
 
-<b style="color:#f5c400; font-size:1rem;">⚠️ Oi S.A. — Recuperação Judicial</b><br><br>
+<b style="color:#92400e; font-size:1rem;">⚠️ Oi S.A. — Recuperação Judicial</b><br><br>
 
 A Oi S.A. entrou em recuperação judicial em 2022 — um dos maiores processos do tipo na história do Brasil.
 A empresa enfrentou uma combinação de dívida bilionária, perda de clientes para concorrentes e queda de receita,
@@ -206,14 +207,14 @@ Atualmente, a Oi opera apenas com serviços de infraestrutura (fibra ótica B2B)
 reestruturação sob supervisão judicial. A ação OIBR3 continua negociada na B3, mas representa uma empresa
 em situação financeira crítica.<br><br>
 
-<b style="color:#f0f6fc;">Vale investir?</b><br>
+<b style="color:#1a1a2e;">Vale investir?</b><br>
 A OIBR3 é considerada uma <b>ação especulativa de altíssimo risco</b>. Investidores institucionais e
 analistas, em sua maioria, não recomendam para carteiras conservadoras ou moderadas.
 Pequenos movimentos positivos no processo judicial podem causar valorizações expressivas no curto prazo,
 o que atrai investidores especulativos — mas o risco de perda total do capital é real e não deve ser ignorado.<br><br>
 
-<span style="color:#adbac7; font-size:0.88rem;">
-Recomendação: somente investidores com perfil <b style="color:#e6edf3;">arrojado</b>, que compreendem os riscos de empresas em recuperação judicial
+<span style="color:#6c757d; font-size:0.88rem;">
+Recomendação: somente investidores com perfil <b style="color:#343a40;">arrojado</b>, que compreendem os riscos de empresas em recuperação judicial
 e estejam dispostos a perder todo o capital alocado, devem considerar este ativo.
 </span>
 
@@ -223,9 +224,9 @@ e estejam dispostos a perder todo o capital alocado, devem considerar este ativo
 # --- Disclaimer ---
 st.markdown('<p class="section-title">Aviso Legal</p>', unsafe_allow_html=True)
 st.markdown("""
-<div style="background:#1c2128; border:1px solid #444c56; border-radius:12px; padding:18px 24px; color:#adbac7; font-size:0.88rem; line-height:1.8;">
+<div style="background:#ffffff; border:1px solid #dee2e6; border-radius:12px; padding:18px 24px; color:#6c757d; font-size:0.88rem; line-height:1.8;">
 
-⚠️ <b style="color:#e6edf3;">Disclaimer:</b> As informações apresentadas neste painel têm caráter <b>exclusivamente educacional e informativo</b>.
+⚠️ <b style="color:#343a40;">Disclaimer:</b> As informações apresentadas neste painel têm caráter <b>exclusivamente educacional e informativo</b>.
 Nenhum conteúdo aqui exibido constitui recomendação de investimento, consultoria financeira ou oferta de compra/venda de valores mobiliários.
 Desempenho passado não é garantia de resultados futuros. Antes de investir, consulte um profissional certificado pela CVM.
 Dados obtidos via Yahoo Finance e sujeitos a atrasos e imprecisões.
