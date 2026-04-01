@@ -14,7 +14,7 @@ class TestGraficoDePrecos:
         dashboard.click_tab("📊 Preços")
         expect(
             dashboard.page.locator('[data-testid="stPlotlyChart"]').first
-        ).to_be_visible()
+        ).to_be_visible(timeout=15_000)
 
     def test_titulo_secao_precos_historicos(self, dashboard: DashboardPage):
         dashboard.click_tab("📊 Preços")

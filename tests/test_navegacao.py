@@ -15,7 +15,7 @@ class TestCarregamentoInicial:
 
     @pytest.mark.smoke
     def test_subtitulo_visivel(self, dashboard: DashboardPage):
-        expect(dashboard.page.get_by_text("Yahoo Finance")).to_be_visible()
+        expect(dashboard.page.locator(".main-subtitle")).to_contain_text("Yahoo Finance")
 
     @pytest.mark.smoke
     def test_status_bar_carregada(self, dashboard: DashboardPage):
