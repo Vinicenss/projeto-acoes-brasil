@@ -20,6 +20,17 @@ streamlit run projeto_acoes/app.py
 pkill -f streamlit
 ```
 
+## GitHub
+
+**Repository:** https://github.com/Vinicenss/projeto-acoes-brasil
+
+**Auto-publish:** A `post-commit` git hook (`.git/hooks/post-commit`) automatically runs `git push origin main` after every commit. To publish changes, just commit normally:
+```bash
+git add .
+git commit -m "descrição da alteração"
+```
+The push to GitHub happens automatically — no manual `git push` needed.
+
 ## Architecture
 
 This is a Streamlit dashboard for comparing stock performance of Brazilian telecom companies on B3 (Vivo/VIVT3.SA, TIM/TIMS3.SA, Oi/OIBR3.SA), located in `projeto_acoes/`.
