@@ -24,7 +24,7 @@ LAYOUT_BASE = dict(
 )
 
 
-def grafico_precos(df: pd.DataFrame) -> go.Figure:
+def grafico_precos(df: pd.DataFrame, periodo_ma: int = None) -> go.Figure:
     fig = px.line(
         df,
         title="Preço de Fechamento (R$)",
@@ -32,6 +32,20 @@ def grafico_precos(df: pd.DataFrame) -> go.Figure:
         color_discrete_map=CORES,
     )
     fig.update_traces(line=dict(width=2.5))
+
+    if periodo_ma:
+        for nome in df.columns:
+            ma = df[nome].rolling(window=periodo_ma).mean()
+            cor = CORES.get(nome, "#999999")
+            fig.add_trace(go.Scatter(
+                x=df.index,
+                y=ma,
+                name=f"{nome} MM{periodo_ma}",
+                line=dict(dash="dash", width=1.5, color=cor),
+                opacity=0.55,
+                showlegend=True,
+            ))
+
     fig.update_layout(**LAYOUT_BASE, legend_title_text="Operadora", hovermode="x unified")
     return fig
 
