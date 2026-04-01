@@ -13,7 +13,7 @@ class TestGraficoDePrecos:
     def test_grafico_visivel_na_aba_precos(self, dashboard: DashboardPage):
         dashboard.click_tab("📊 Preços")
         expect(
-            dashboard.page.locator('[data-testid="stPlotlyChart"]').first
+            dashboard.page.locator('.js-plotly-plot').first
         ).to_be_visible(timeout=15_000)
 
     def test_titulo_secao_precos_historicos(self, dashboard: DashboardPage):
@@ -58,8 +58,8 @@ class TestMediaMovel:
     def test_grafico_tecnica_visivel_com_ma_ativo(self, dashboard_tecnica: DashboardPage):
         dashboard_tecnica.click_ma_toggle()
         expect(
-            dashboard_tecnica.page.locator('[data-testid="stPlotlyChart"]').first
-        ).to_be_visible()
+            dashboard_tecnica.page.locator('.js-plotly-plot').first
+        ).to_be_visible(timeout=15_000)
 
     def test_grafico_volatilidade_visivel_na_aba_tecnica(self, dashboard_tecnica: DashboardPage):
         titulo = dashboard_tecnica.page.get_by_text("Volatilidade")
@@ -71,8 +71,8 @@ class TestGraficoRetornoAcumulado:
     def test_grafico_retorno_visivel(self, dashboard: DashboardPage):
         dashboard.click_tab("💹 Retorno Acumulado")
         expect(
-            dashboard.page.locator('[data-testid="stPlotlyChart"]').first
-        ).to_be_visible()
+            dashboard.page.locator('.js-plotly-plot').first
+        ).to_be_visible(timeout=15_000)
 
     def test_titulo_secao_retorno_acumulado(self, dashboard: DashboardPage):
         dashboard.click_tab("💹 Retorno Acumulado")

@@ -31,20 +31,16 @@ class DashboardPage:
         self.page.wait_for_selector(".status-bar", timeout=30_000)
 
     def wait_for_rerun(self):
-        """Aguarda o Streamlit terminar de re-executar após uma interação."""
-        try:
-            self.page.wait_for_selector(
-                "[data-testid='stStatusWidget']", state="visible", timeout=3_000
-            )
-        except Exception:
-            pass
-        self.page.wait_for_selector(
-            "[data-testid='stStatusWidget']", state="hidden", timeout=20_000
-        )
+        """Aguarda o Streamlit terminar de re-executar após uma interação.
+
+        Usa timeout fixo: o Streamlit não expõe um indicador de rerun estável
+        em todas as versões. 4s é suficiente para reruns com fetch de dados.
+        """
+        self.page.wait_for_timeout(4_000)
 
     def click_tab(self, name: str):
         self.page.get_by_role("tab", name=name).click()
-        self.page.wait_for_timeout(600)
+        self.page.wait_for_timeout(1_000)
 
     def get_active_tab_name(self) -> str:
         return self.page.locator('[role="tab"][aria-selected="true"]').inner_text()
@@ -64,19 +60,17 @@ class DashboardPage:
         return self.page.get_by_label("Data de fim").input_value()
 
     def set_date_inicio(self, value: str):
-        """value no formato aceito pelo Streamlit (YYYY/MM/DD ou MM/DD/YYYY)."""
+        """value no formato YYYY/MM/DD."""
         field = self.page.get_by_label("Data de início")
         field.click()
-        field.select_all()
-        field.type(value)
+        field.fill(value)
         field.press("Enter")
         self.wait_for_rerun()
 
     def set_date_fim(self, value: str):
         field = self.page.get_by_label("Data de fim")
         field.click()
-        field.select_all()
-        field.type(value)
+        field.fill(value)
         field.press("Enter")
         self.wait_for_rerun()
 
@@ -87,7 +81,7 @@ class DashboardPage:
 
     def toggle_company(self, name: str):
         self.page.get_by_label(name).click()
-        self.page.wait_for_timeout(1_500)
+        self.page.wait_for_timeout(3_000)
 
     def uncheck_all_companies(self):
         for company in self.COMPANIES:
@@ -135,12 +129,10 @@ class DashboardPage:
 
     def click_ma_toggle(self):
         self.page.get_by_label("Exibir Média Móvel").click()
-        self.page.wait_for_timeout(800)
+        self.page.wait_for_timeout(1_000)
 
     def is_ma_slider_visible(self) -> bool:
-        return (
-            self.page.get_by_text("Período da Média Móvel (dias)").is_visible()
-        )
+        return self.page.get_by_text("Período da Média Móvel (dias)").is_visible()
 
     def set_ma_period(self, value: int):
         """Define o período da MA via teclado (posição relativa ao valor atual)."""
@@ -172,9 +164,7 @@ class DashboardPage:
     # ── Expanders ────────────────────────────────────────────────────────────
 
     def is_expander_visible(self, partial_text: str) -> bool:
-        return (
-            self.page.locator(f"summary:has-text('{partial_text}')").count() > 0
-        )
+        return self.page.locator(f"summary:has-text('{partial_text}')").count() > 0
 
     def is_expander_open(self, partial_text: str) -> bool:
         details = self.page.locator(
@@ -194,5 +184,5 @@ class DashboardPage:
     def has_error(self, text: str) -> bool:
         return self.page.locator(f'[data-testid="stAlert"]:has-text("{text}")').count() > 0
 
-    def has_chart(self, key: str) -> bool:
-        return self.page.locator(f'[data-testid="stPlotlyChart"]').count() > 0
+    def has_chart(self) -> bool:
+        return self.page.locator(".js-plotly-plot").count() > 0

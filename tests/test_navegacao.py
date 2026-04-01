@@ -69,14 +69,14 @@ class TestConteudoPorAba:
 
     def test_aba_precos_exibe_grafico(self, dashboard: DashboardPage):
         dashboard.click_tab("📊 Preços")
-        expect(dashboard.page.locator('[data-testid="stPlotlyChart"]').first).to_be_visible()
+        expect(dashboard.page.locator('.js-plotly-plot').first).to_be_visible(timeout=15_000)
 
     def test_aba_tecnica_exibe_toggle_ma(self, dashboard_tecnica: DashboardPage):
         expect(dashboard_tecnica.page.get_by_label("Exibir Média Móvel")).to_be_visible()
 
     def test_aba_retorno_exibe_grafico(self, dashboard: DashboardPage):
         dashboard.click_tab("💹 Retorno Acumulado")
-        expect(dashboard.page.locator('[data-testid="stPlotlyChart"]').first).to_be_visible()
+        expect(dashboard.page.locator('.js-plotly-plot').first).to_be_visible(timeout=15_000)
 
     def test_aba_relatorio_exibe_tabela(self, dashboard_relatorio: DashboardPage):
         expect(dashboard_relatorio.page.locator('[data-testid="stDataFrame"]')).to_be_visible()
